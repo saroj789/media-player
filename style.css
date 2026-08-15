@@ -72,3 +72,19 @@
   -webkit-user-select: none;
   user-select: none;
 }
+
+/* Wrapper that crops out YouTube's native header title and bottom logos */
+#player-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Scale and push the iframe to cut off native overlays */
+#player-wrapper iframe {
+  width: 100% !important;
+  height: 130% !important;
+  position: absolute !important;
+  top: -15% !important;
+  left: 0 !important;
+  border: none !important;
+}

@@ -13,9 +13,11 @@ function onYouTubeIframeAPIReady() {
     width: '100%',
     playerVars: {
       autoplay: 0,
-      controls: 0,
-      rel: 0,
-      fs: 0
+      controls: 0,        // Keeps native timeline and overlays hidden
+      rel: 0,             // Limits related videos to current channel
+      fs: 0,              // Hides native fullscreen button
+      modestbranding: 1,  // Reduces branding elements where possible
+      iv_load_policy: 3   // Hides video annotations
     },
     events: {
       'onReady': onPlayerReady,
@@ -411,4 +413,10 @@ function updateCurrentVideoUI() {
       }
     }
   });
+}
+
+// --- Global Theme Persistence Toggle ---
+function toggleTheme() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }

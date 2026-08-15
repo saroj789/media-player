@@ -6,6 +6,19 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Media Player - High-Fidelity Focus</title>
 
+  <!-- Automatic System Theme / Saved Theme Initializer -->
+  <script>
+    (function () {
+      var saved = localStorage.getItem('theme');
+      var preferred = saved || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      if (preferred === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     rel="stylesheet" />
@@ -68,7 +81,7 @@
         <!-- Dark Mode Toggle -->
         <button
           class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-neutral-500 dark:text-on-surface-variant hover:bg-neutral-100 dark:hover:bg-surface-container transition-colors flex-shrink-0"
-          onclick="document.documentElement.classList.toggle('dark')" title="Toggle Theme">
+          onclick="toggleTheme()" title="Toggle Theme">
           <span class="material-symbols-outlined text-[20px] dark:hidden">dark_mode</span>
           <span class="material-symbols-outlined text-[20px] hidden dark:block">light_mode</span>
         </button>
@@ -99,12 +112,14 @@
       <div
         class="mt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-2 sm:gap-4 pb-2 min-w-0">
         <div class="flex flex-col text-left min-w-0 flex-1 max-w-full">
-          <h1 id="current-video-title" class="text-base lg:text-lg font-bold truncate leading-snug">Paste a YouTube Playlist to
+          <h1 id="current-video-title" class="text-base lg:text-lg font-bold truncate leading-snug">Paste a YouTube
+            Playlist to
             Start</h1>
           <p id="current-video-index"
-            class="text-xs lg:text-sm text-neutral-500 dark:text-on-surface-variant mt-0.5 truncate max-w-full">Ready for playback
+            class="text-xs lg:text-sm text-neutral-500 dark:text-on-surface-variant mt-0.5 truncate max-w-full">Ready
+            for playback
           </p>
-          </div>
+        </div>
         <div class="flex gap-2 w-full sm:w-auto flex-shrink-0 pt-1 sm:pt-0">
           <button
             class="flex-1 sm:flex-none justify-center px-3 sm:px-4 py-1.5 rounded-full border border-neutral-300 dark:border-outline-variant text-neutral-700 dark:text-on-surface hover:bg-neutral-100 dark:hover:bg-surface-container text-xs font-semibold flex items-center gap-1">
