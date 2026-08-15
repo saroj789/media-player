@@ -1,9 +1,8 @@
 let player;
 let isPlaying = false;
-let isShuffle = false;
-let repeatMode = 0; // 0 = off, 1 = playlist, 2 = single video
 let currentPlaylist = [];
 let progressInterval = null;
+let isDraggingProgress = false;
 
 const videoMetadataCache = {};
 const STORAGE_PLAYLIST_KEY = 'yt_saved_playlist_url';
@@ -49,6 +48,7 @@ function loadNewPlaylist(listId) {
   }
 
   currentPlaylist = [];
+
   const container = document.getElementById('playlist-container');
   if (container) {
     container.innerHTML = `
@@ -89,13 +89,6 @@ function onPlayerStateChange(event) {
   if (event.data === YT.PlayerState.PLAYING || event.data === YT.PlayerState.CUED) {
     updateCurrentVideoUI();
   }
-
-  if (event.data === YT.PlayerState.ENDED) {
-    if (repeatMode === 2) {
-      player.seekTo(0);
-      player.playVideo();
-    }
-  }
 }
 
 function setupEventListeners() {
@@ -104,15 +97,12 @@ function setupEventListeners() {
   const playPauseBtn = document.getElementById('btn-play-pause');
   const nextBtn = document.getElementById('btn-next');
   const prevBtn = document.getElementById('btn-prev');
-  const shuffleBtn = document.getElementById('btn-shuffle');
-  const repeatBtn = document.getElementById('btn-repeat');
   const progressContainer = document.getElementById('progress-container');
   const volumeContainer = document.getElementById('volume-container');
   const volumeBtn = document.getElementById('btn-volume');
   const fullscreenBtn = document.getElementById('btn-fullscreen');
   const preferencesBtn = document.getElementById('btn-preferences');
 
-  // Trigger load on button click
   loadBtn.addEventListener('click', () => {
     const rawUrl = urlInput.value.trim();
     const listId = extractPlaylistId(rawUrl);
@@ -125,7 +115,6 @@ function setupEventListeners() {
     }
   });
 
-  // Trigger load when pressing ENTER in the input bar
   urlInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -134,50 +123,70 @@ function setupEventListeners() {
   });
 
   playPauseBtn.addEventListener('click', () => {
-    if (isPlaying) {
-      player.pauseVideo();
-    } else {
-      player.playVideo();
-    }
+    if (isPlaying) player.pauseVideo();
+    else player.playVideo();
   });
 
   nextBtn.addEventListener('click', () => player.nextVideo());
   prevBtn.addEventListener('click', () => player.previousVideo());
 
-  shuffleBtn.addEventListener('click', () => {
-    isShuffle = !isShuffle;
-    shuffleBtn.classList.toggle('is-active', isShuffle);
-    player.setShuffle(isShuffle);
-  });
-
-  repeatBtn.addEventListener('click', () => {
-    repeatMode = (repeatMode + 1) % 3;
-    if (repeatMode === 0) {
-      repeatBtn.classList.remove('is-active');
-      repeatBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] lg:text-[20px]">repeat</span>';
-      player.setLoop(false);
-    } else if (repeatMode === 1) {
-      repeatBtn.classList.add('is-active');
-      repeatBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] lg:text-[20px]">repeat</span>';
-      player.setLoop(true);
-    } else {
-      repeatBtn.classList.add('is-active');
-      repeatBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] lg:text-[20px]">repeat_one</span>';
-      player.setLoop(true);
-    }
-  });
-
-  progressContainer.addEventListener('click', (e) => {
+  // --- Smooth Progress Drag Handling ---
+  const getPercentageFromEvent = (e) => {
     const rect = progressContainer.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const percentage = clickX / rect.width;
-    const duration = player.getDuration();
-    if (duration) {
-      player.seekTo(duration * percentage, true);
-      updateProgressUI();
-    }
-  });
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const offsetX = clientX - rect.left;
+    return Math.min(Math.max(offsetX / rect.width, 0), 1);
+  };
 
+  const updateScrubberVisuals = (percentage) => {
+    const duration = player && player.getDuration ? player.getDuration() : 0;
+    const current = duration * percentage;
+
+    document.getElementById('time-current').innerText = formatTime(current);
+    const playedBar = document.getElementById('progress-played');
+    const scrubber = document.getElementById('progress-scrubber');
+
+    if (playedBar) playedBar.style.width = `${percentage * 100}%`;
+    if (scrubber) scrubber.style.left = `${percentage * 100}%`;
+  };
+
+  const startDrag = (e) => {
+    isDraggingProgress = true;
+    const pct = getPercentageFromEvent(e);
+    updateScrubberVisuals(pct);
+  };
+
+  const moveDrag = (e) => {
+    if (!isDraggingProgress) return;
+    const pct = getPercentageFromEvent(e);
+    updateScrubberVisuals(pct);
+  };
+
+  const stopDrag = (e) => {
+    if (!isDraggingProgress) return;
+    isDraggingProgress = false;
+
+    const rect = progressContainer.getBoundingClientRect();
+    const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+    const offsetX = clientX - rect.left;
+    const pct = Math.min(Math.max(offsetX / rect.width, 0), 1);
+
+    const duration = player && player.getDuration ? player.getDuration() : 0;
+    if (duration) {
+      player.seekTo(duration * pct, true);
+    }
+  };
+
+  progressContainer.addEventListener('mousedown', startDrag);
+  progressContainer.addEventListener('touchstart', startDrag, { passive: true });
+
+  window.addEventListener('mousemove', moveDrag);
+  window.addEventListener('touchmove', moveDrag, { passive: true });
+
+  window.addEventListener('mouseup', stopDrag);
+  window.addEventListener('touchend', stopDrag);
+
+  // Volume Bar Controls
   volumeContainer.addEventListener('click', (e) => {
     const rect = volumeContainer.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
@@ -217,11 +226,59 @@ function setupEventListeners() {
       console.log('Preferences clicked');
     });
   }
+
+  // --- Slidable Volume Bar Controls ---
+  let isDraggingVolume = false;
+
+  const updateVolumeFromEvent = (e) => {
+    const rect = volumeContainer.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const offsetX = clientX - rect.left;
+    const volumePercent = Math.min(Math.max((offsetX / rect.width) * 100, 0), 100);
+
+    if (player && typeof player.setVolume === 'function') {
+      player.setVolume(volumePercent);
+      if (player.isMuted() && volumePercent > 0) {
+        player.unMute();
+      }
+    }
+
+    document.getElementById('volume-fill').style.width = `${volumePercent}%`;
+
+    const volumeIcon = document.getElementById('volume-icon');
+    if (volumePercent === 0) volumeIcon.innerText = 'volume_off';
+    else if (volumePercent < 50) volumeIcon.innerText = 'volume_down';
+    else volumeIcon.innerText = 'volume_up';
+  };
+
+  const startVolumeDrag = (e) => {
+    isDraggingVolume = true;
+    updateVolumeFromEvent(e);
+  };
+
+  const moveVolumeDrag = (e) => {
+    if (!isDraggingVolume) return;
+    updateVolumeFromEvent(e);
+  };
+
+  const stopVolumeDrag = () => {
+    isDraggingVolume = false;
+  };
+  // Attach mouse & touch listeners to volume bar
+  volumeContainer.addEventListener('mousedown', startVolumeDrag);
+  volumeContainer.addEventListener('touchstart', startVolumeDrag, { passive: true });
+
+  window.addEventListener('mousemove', moveVolumeDrag);
+  window.addEventListener('touchmove', moveVolumeDrag, { passive: true });
+
+  window.addEventListener('mouseup', stopVolumeDrag);
+  window.addEventListener('touchend', stopVolumeDrag);
+
 }
 
 function startProgressTimer() {
   stopProgressTimer();
-  progressInterval = setInterval(updateProgressUI, 500);
+  progressInterval = setInterval(updateProgressUI, 250);
 }
 
 function stopProgressTimer() {
@@ -229,6 +286,7 @@ function stopProgressTimer() {
 }
 
 function updateProgressUI() {
+  if (isDraggingProgress) return;
   if (!player || !player.getCurrentTime) return;
 
   const current = player.getCurrentTime() || 0;
@@ -307,23 +365,35 @@ function updateCurrentVideoUI() {
     videoMetadataCache[videoId] = { title: ytData.title, author: ytData.author };
   }
 
-  document.getElementById('current-video-title').innerText = currentTitle;
+  // Update Main Video Title & Hover Tooltip
+  const titleEl = document.getElementById('current-video-title');
+  titleEl.innerText = currentTitle;
+  titleEl.title = currentTitle; // Native hover tooltip
+
   document.getElementById('current-video-index').innerText = currentAuthor;
 
-  document.getElementById('mini-title').innerText = currentTitle;
+  // Update Bottom Bar Mini Player & Hover Tooltip
+  const miniTitleEl = document.getElementById('mini-title');
+  miniTitleEl.innerText = currentTitle;
+  miniTitleEl.title = currentTitle; // Native hover tooltip for mini bar
+
   document.getElementById('mini-artist').innerText = currentAuthor;
   document.getElementById('mini-thumb').style.backgroundImage = `url('${thumbUrl}')`;
 
+  // Update Playlist Highlight State
   const items = document.querySelectorAll('.playlist-item');
   items.forEach((item, index) => {
     const vId = currentPlaylist[index];
     const cached = videoMetadataCache[vId];
-    const titleEl = item.querySelector('.track-title');
-    const artistEl = item.querySelector('.track-artist');
+    const itemTitleEl = item.querySelector('.track-title');
+    const itemArtistEl = item.querySelector('.track-artist');
 
     if (cached) {
-      if (titleEl) titleEl.innerText = cached.title;
-      if (artistEl) artistEl.innerText = cached.author;
+      if (itemTitleEl) {
+        itemTitleEl.innerText = cached.title;
+        itemTitleEl.title = cached.title; // Add tooltip for list items too
+      }
+      if (itemArtistEl) itemArtistEl.innerText = cached.author;
     }
 
     const indicator = item.querySelector('.play-indicator');

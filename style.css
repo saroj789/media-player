@@ -37,3 +37,38 @@
 .dark ::-webkit-scrollbar-thumb:hover {
   background: #353534;
 }
+
+/* Custom Scrollbar for Playlist Sidebar */
+#playlist-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+#playlist-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+#playlist-container::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.3);
+  border-radius: 9999px;
+}
+
+.dark #playlist-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+#playlist-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.5);
+}
+
+/* Prevent unwanted browser gestures during progress bar dragging on touch screens */
+#progress-container {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#volume-container {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

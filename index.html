@@ -36,7 +36,7 @@
 <body
   class="bg-neutral-50 dark:bg-surface text-neutral-900 dark:text-on-surface antialiased h-screen flex flex-col overflow-x-hidden overflow-y-hidden pt-2 transition-colors duration-200 max-w-full">
 
-  <!-- TopNavBar (Responsive & Mobile Safe) -->
+  <!-- TopNavBar -->
   <header
     class="bg-white dark:bg-surface border-b border-neutral-200 dark:border-outline-variant w-full h-14 sm:h-16 lg:h-20 sticky top-0 z-50 flex-shrink-0 transition-colors duration-200 overflow-x-hidden">
     <div class="max-w-[1200px] mx-auto w-full flex justify-between items-center px-3 sm:px-6 h-full gap-2">
@@ -73,7 +73,7 @@
           <span class="material-symbols-outlined text-[20px] hidden dark:block">light_mode</span>
         </button>
 
-        <!-- Preferences Button (Hidden on small mobile) -->
+        <!-- Preferences Button -->
         <button id="btn-preferences"
           class="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 rounded-full items-center justify-center text-neutral-500 dark:text-on-surface-variant hover:bg-neutral-100 dark:hover:bg-surface-container transition-colors flex-shrink-0"
           title="Preferences">
@@ -99,12 +99,12 @@
       <div
         class="mt-3 flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-2 sm:gap-4 pb-2 min-w-0">
         <div class="flex flex-col text-left min-w-0 flex-1 max-w-full">
-          <h1 id="current-video-title" class="text-base lg:text-lg font-bold break-words line-clamp-2 leading-snug">
-            Paste a YouTube Playlist to Start</h1>
+          <h1 id="current-video-title" class="text-base lg:text-lg font-bold truncate leading-snug">Paste a YouTube Playlist to
+            Start</h1>
           <p id="current-video-index"
-            class="text-xs lg:text-sm text-neutral-500 dark:text-on-surface-variant mt-0.5 truncate max-w-full">Ready
-            for playback</p>
-        </div>
+            class="text-xs lg:text-sm text-neutral-500 dark:text-on-surface-variant mt-0.5 truncate max-w-full">Ready for playback
+          </p>
+          </div>
         <div class="flex gap-2 w-full sm:w-auto flex-shrink-0 pt-1 sm:pt-0">
           <button
             class="flex-1 sm:flex-none justify-center px-3 sm:px-4 py-1.5 rounded-full border border-neutral-300 dark:border-outline-variant text-neutral-700 dark:text-on-surface hover:bg-neutral-100 dark:hover:bg-surface-container text-xs font-semibold flex items-center gap-1">
@@ -140,16 +140,18 @@
     <div class="w-full max-w-[1200px] flex flex-col justify-center gap-1.5 sm:gap-2 min-w-0">
 
       <!-- Progress Bar Area -->
-      <div class="flex items-center gap-2 sm:gap-4 w-full group min-w-0">
+      <div class="flex items-center gap-2 sm:gap-4 w-full group min-w-0 select-none">
         <span id="time-current"
           class="text-[10px] sm:text-[12px] text-neutral-500 dark:text-on-surface-variant w-7 sm:w-10 text-right font-mono flex-shrink-0">0:00</span>
 
-        <div id="progress-container"
-          class="flex-1 h-1.5 bg-neutral-200 dark:bg-surface-container-high rounded-full relative cursor-pointer flex items-center transition-colors">
-          <div id="progress-played"
-            class="absolute left-0 h-full bg-neutral-900 dark:bg-primary rounded-full w-0 transition-all"></div>
-          <div id="progress-scrubber"
-            class="absolute left-0 w-3 h-3 bg-neutral-900 dark:bg-primary rounded-full -ml-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm scale-0 group-hover:scale-100 duration-200">
+        <div id="progress-container" class="flex-1 h-3 flex items-center cursor-pointer relative touch-none">
+          <div
+            class="w-full h-1.5 bg-neutral-200 dark:bg-surface-container-high rounded-full relative overflow-visible">
+            <div id="progress-played"
+              class="absolute left-0 top-0 h-full bg-neutral-900 dark:bg-primary rounded-full w-0"></div>
+            <div id="progress-scrubber"
+              class="absolute top-1/2 -translate-y-1/2 left-0 w-3.5 h-3.5 bg-neutral-900 dark:bg-primary rounded-full -ml-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-md pointer-events-none">
+            </div>
           </div>
         </div>
 
@@ -175,13 +177,8 @@
           </div>
         </div>
 
-        <!-- Core Controls -->
-        <div class="flex items-center justify-center gap-1 sm:gap-4 flex-1">
-          <button id="btn-shuffle"
-            class="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 rounded-full items-center justify-center text-neutral-500 hover:text-neutral-900 dark:hover:text-on-surface transition-colors flex-shrink-0">
-            <span class="material-symbols-outlined text-[18px] sm:text-[20px]">shuffle</span>
-          </button>
-
+        <!-- Core Controls (Prev, Play/Pause, Next) -->
+        <div class="flex items-center justify-center gap-2 sm:gap-4 flex-1">
           <button id="btn-prev"
             class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-neutral-700 dark:text-on-surface hover:text-neutral-900 dark:hover:text-primary transition-colors flex-shrink-0">
             <span class="material-symbols-outlined fill text-[20px] sm:text-[24px]">skip_previous</span>
@@ -195,11 +192,6 @@
           <button id="btn-next"
             class="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-neutral-700 dark:text-on-surface hover:text-primary transition-colors flex-shrink-0">
             <span class="material-symbols-outlined fill text-[20px] sm:text-[24px]">skip_next</span>
-          </button>
-
-          <button id="btn-repeat"
-            class="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 rounded-full items-center justify-center text-neutral-500 hover:text-neutral-900 dark:hover:text-on-surface transition-colors flex-shrink-0">
-            <span class="material-symbols-outlined text-[18px] sm:text-[20px]">repeat</span>
           </button>
         </div>
 
