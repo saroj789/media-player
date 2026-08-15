@@ -1,0 +1,350 @@
+<!DOCTYPE html><html class="dark" lang="en" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Media Player - High-Fidelity Focus</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom scrollbar for playlist */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d4d4d4;
+            border-radius: 9999px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a3a3a3;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #353534;
+        }
+    </style>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container": "#201F1F",
+                "on-secondary": "#2f3132",
+                "primary": "#ffffff",
+                "on-error": "#690005",
+                "error-container": "#93000a",
+                "surface-tint": "#c6c6c7",
+                "silver-accent": "#E5E2E1",
+                "outline": "#454748",
+                "surface-container-highest": "#353434",
+                "on-secondary-fixed-variant": "#454748",
+                "surface-bright": "#393939",
+                "on-secondary-fixed": "#1a1c1d",
+                "surface-container-high": "#2a2a2a",
+                "tertiary-fixed-dim": "#c6c6c7",
+                "secondary-fixed": "#e3e2e3",
+                "on-surface": "#e5e2e1",
+                "on-primary-container": "#636565",
+                "on-primary": "#2f3131",
+                "inverse-surface": "#e5e2e1",
+                "surface": "#131313",
+                "surface-container-lowest": "#0e0e0e",
+                "secondary-container": "#454748",
+                "on-tertiary-container": "#636565",
+                "tertiary-fixed": "#e2e2e2",
+                "on-primary-fixed-variant": "#454747",
+                "background": "#141313",
+                "secondary-fixed-dim": "#c6c6c7",
+                "tertiary": "#ffffff",
+                "inverse-on-surface": "#313030",
+                "error": "#ffb4ab",
+                "outline-variant": "#444748",
+                "surface-variant": "#353434",
+                "on-secondary-container": "#b5b5b6",
+                "surface-container-low": "#1c1b1b",
+                "on-surface-variant": "#c4c7c8",
+                "secondary": "#c6c6c7",
+                "tertiary-container": "#e2e2e2",
+                "surface-dim": "#141313",
+                "on-tertiary-fixed": "#1a1c1c",
+                "fidelity-red": "#FF0033",
+                "on-tertiary-fixed-variant": "#454747",
+                "on-error-container": "#ffdad6",
+                "inverse-primary": "#5d5f5f",
+                "primary-fixed-dim": "#c6c6c7",
+                "primary-container": "#e2e2e2",
+                "on-tertiary": "#2f3131",
+                "on-background": "#e5e2e1",
+                "on-primary-fixed": "#1a1c1c",
+                "primary-fixed": "#e2e2e2"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "max-content-width": "1200px",
+                "margin": "24px",
+                "sidebar-width": "380px",
+                "unit": "4px",
+                "gutter": "20px",
+                "sm": "8px",
+                "xl": "48px",
+                "md": "16px",
+                "xs": "4px",
+                "lg": "24px"
+        },
+        "fontFamily": {
+                "label-caps": [
+                        "Geist"
+                ],
+                "headline-md": [
+                        "Geist"
+                ],
+                "caption": [
+                        "Geist"
+                ],
+                "headline-lg": [
+                        "Geist"
+                ],
+                "body-sm": [
+                        "Geist"
+                ],
+                "headline-lg-mobile": [
+                        "Geist"
+                ],
+                "body-lg": [
+                        "Geist"
+                ]
+        },
+        "fontSize": {
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-md": [
+                        "20px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "700"
+                        }
+                ],
+                "caption": [
+                        "11px",
+                        {
+                                "lineHeight": "1.4",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-sm": [
+                        "14px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "fontWeight": "400"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+</head>
+<body class="bg-neutral-50 dark:bg-surface text-neutral-900 dark:text-on-surface font-body-lg antialiased h-screen flex flex-col overflow-hidden pt-sm transition-colors duration-200">
+<!-- TopNavBar -->
+<header class="bg-white dark:bg-surface border-b border-neutral-200 dark:border-outline-variant w-full h-16 sticky top-0 z-50 lg:h-20 transition-colors duration-200"><div class="max-w-[1200px] mx-auto w-full flex justify-between items-center px-md lg:px-xl h-full">
+<div class="flex items-center gap-sm lg:gap-md">
+<span class="material-symbols-outlined text-neutral-900 dark:text-primary text-[24px] lg:text-[28px] transition-colors">graphic_eq</span>
+<span class="font-headline-md text-[16px] lg:text-headline-md font-bold text-neutral-900 dark:text-primary transition-colors">Media Player</span>
+</div>
+<div class="flex items-center gap-sm lg:gap-md">
+<div class="relative w-32 sm:w-64 md:w-96">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-neutral-500 dark:text-on-surface-variant text-[20px] transition-colors">search</span>
+<input class="w-full bg-neutral-100 dark:bg-surface-container-low border border-neutral-200 dark:border-surface-container-high rounded-full py-sm pl-8 lg:pl-xl pr-md text-neutral-900 dark:text-on-surface focus:outline-none focus:border-neutral-900 dark:focus:border-primary transition-colors font-body-sm text-[12px] lg:text-body-sm placeholder-neutral-500 dark:placeholder-on-surface-variant/40" placeholder="SEARCH URL..." type="text">
+</div>
+<button class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-neutral-500 dark:text-on-surface-variant hover:bg-neutral-100 dark:hover:bg-surface-container hover:text-neutral-900 dark:hover:text-on-surface transition-colors" onclick="document.documentElement.classList.toggle('dark')" title="Toggle Theme">
+<span class="material-symbols-outlined dark:hidden">dark_mode</span>
+<span class="material-symbols-outlined hidden dark:block">light_mode</span>
+</button>
+<button class="w-8 h-8 lg:w-10 lg:h-10 rounded-full hidden sm:flex items-center justify-center text-neutral-500 dark:text-on-surface-variant hover:bg-neutral-100 dark:hover:bg-surface-container hover:text-neutral-900 dark:hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-neutral-500 dark:text-on-surface-variant hover:bg-neutral-100 dark:hover:bg-surface-container hover:text-neutral-900 dark:hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div></header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto lg:overflow-hidden p-md lg:p-margin flex flex-col lg:flex-row gap-md lg:gap-margin max-w-[1200px] mx-auto w-full pb-32 px-md lg:px-xl mt-md lg:mt-lg">
+<!-- Main Video Player Section -->
+<div class="flex-1 flex flex-col min-w-0 overflow-visible lg:overflow-y-auto pr-0 lg:pr-sm pb-8">
+<div class="w-full aspect-video bg-neutral-200 dark:bg-surface-container-high rounded-xl overflow-hidden relative shadow-xl dark:shadow-2xl border border-neutral-300 dark:border-surface-container-highest transition-colors duration-200">
+<div class="w-full h-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBlHmYVAvzFNYx5HNdaUix-KwUh3v6UC2Eeq69ttCDg6ecAfPjNeAlYltDDOr8SZ2X5BWF2qsU5J01qbeOdZNhP4-Gw2Qh0qh71SYG95IuxDTXglGLfcjnp6IOv_Ttmvm0Toz-6MTNq2LTIISK6eUq5dcvdjccGY6vWJFXkXhy9G2PA0skgl2Z8047AmweRfYTivf1xU0EM2kQNBXQu3AnY7n4i0q-1HrvyBLjYFjVz2k4fY23K2o0-');"></div>
+<!-- Overlays (e.g., play button or status) could go here -->
+</div>
+<div class="mt-md lg:mt-lg flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-md sm:gap-0">
+<div class="flex flex-col items-start text-left">
+<h1 class="font-headline-lg-mobile lg:font-headline-lg text-headline-lg-mobile lg:text-headline-lg text-neutral-900 dark:text-on-surface transition-colors">Alpha Waves Introspection</h1>
+<p class="font-body-lg text-neutral-600 dark:text-on-surface-variant mt-xs text-[14px] lg:text-[16px] transition-colors">Neural Nets • Focus Frequencies</p>
+</div>
+<div class="flex gap-sm w-full sm:w-auto">
+<button class="flex-1 sm:flex-none justify-center px-md py-sm rounded-full border border-neutral-300 dark:border-outline-variant text-neutral-700 dark:text-on-surface hover:bg-neutral-100 dark:hover:bg-surface-container hover:border-neutral-400 dark:hover:border-outline transition-colors font-label-caps flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">favorite</span> SAVE
+</button>
+<button class="flex-1 sm:flex-none justify-center px-md py-sm rounded-full border border-neutral-300 dark:border-outline-variant text-neutral-700 dark:text-on-surface hover:bg-neutral-100 dark:hover:bg-surface-container hover:border-neutral-400 dark:hover:border-outline transition-colors font-label-caps flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">share</span> SHARE
+</button>
+</div>
+</div>
+</div>
+<!-- Playlist Sidebar -->
+<div class="w-full lg:w-[360px] xl:w-[400px] flex-shrink-0 flex flex-col bg-white dark:bg-surface-container-lowest rounded-xl border border-neutral-200 dark:border-surface-container-high overflow-hidden h-[400px] lg:h-full transition-colors duration-200">
+<div class="p-md border-b border-neutral-200 dark:border-surface-container-high flex justify-between items-center bg-neutral-50 dark:bg-surface-container-low transition-colors duration-200">
+<h2 class="font-headline-md text-headline-md text-neutral-900 dark:text-on-surface transition-colors">Up Next</h2>
+<span class="text-neutral-600 dark:text-on-surface-variant font-body-sm transition-colors">4 tracks</span>
+</div>
+<div class="flex-1 overflow-y-auto p-sm flex flex-col gap-xs pb-8">
+<!-- Active Track -->
+<div class="flex items-center gap-md p-sm rounded-lg bg-neutral-100 dark:bg-surface-container-high cursor-pointer shadow-sm transition-colors duration-200">
+<div class="w-12 h-12 rounded bg-neutral-200 dark:bg-surface-container-highest flex-shrink-0 bg-cover bg-center border border-neutral-200 dark:border-outline-variant/30 transition-colors" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDyzz8kt5nPGl2_unL9u4KK7iV2W25emUGdAywZLWI-uFLdU5FPYIH2CVpdc0GlkyDGKgcD1nCOKc72UisK8NFN7L3AtcmiyNgSGiw2cjR5KvOn1j1ewBZL_ADUXT_NG9IPRr-LWSvWYoe2sHm_qwGo2M7tBHL2hgm99ZiqXSgd41s2n07S0xwWtaBgaUmiRCjZxCcbR1TzY06xcEu28m2NQMAE_g6KHbf0y1Et3zqbytHm8rXp0ARL');"></div>
+<div class="flex-1 min-w-0">
+<p class="font-body-sm text-[14px] text-neutral-900 dark:text-primary truncate font-medium transition-colors">Alpha Waves Introspection</p>
+<p class="font-body-sm text-[12px] text-neutral-500 dark:text-on-surface-variant truncate transition-colors">Neural Nets</p>
+</div>
+<span class="material-symbols-outlined text-neutral-900 dark:text-primary text-[20px] animate-pulse transition-colors">equalizer</span>
+</div>
+<!-- Inactive Track 1 -->
+<div class="flex items-center gap-md p-sm rounded-lg hover:bg-neutral-50 dark:hover:bg-surface-container cursor-pointer transition-colors group">
+<div class="w-12 h-12 rounded bg-neutral-100 dark:bg-surface-container-high flex-shrink-0 bg-cover bg-center opacity-70 group-hover:opacity-100 transition-all border border-neutral-200 dark:border-outline-variant/30" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAvCWGNUGlTDVkJBEvOtbqKvEB3PX0RSI-aazg79ZshKUUvk_Zz7c2vDXVmYk9F4pXGBEQ2G2eUXZPAnW0UA0TNAqdY2uGWArDBhJkbKgSZXZZt6eunAMBnZ_5SXQRy-k96ziBfuKLCk1Ba1gHcM1mcKPAewk9gzfJZidwWDmt8zPzGr1nHWJAOZlhorZsXbycKdkUCxbFYtXQyndhEdHNLXHsOODJDtSNGycDb2U9W4gDEMF6yPtyk');"></div>
+<div class="flex-1 min-w-0">
+<p class="font-body-sm text-[14px] text-neutral-700 dark:text-on-surface truncate group-hover:text-neutral-900 dark:group-hover:text-primary transition-colors">Deep Theta State</p>
+<p class="font-body-sm text-[12px] text-neutral-500 dark:text-on-surface-variant truncate transition-colors">Cognitive Core</p>
+</div>
+<span class="font-body-sm text-[12px] text-neutral-500 dark:text-on-surface-variant group-hover:text-neutral-700 dark:group-hover:text-on-surface transition-colors">45:00</span>
+</div>
+<!-- Inactive Track 2 -->
+<div class="flex items-center gap-md p-sm rounded-lg hover:bg-neutral-50 dark:hover:bg-surface-container cursor-pointer transition-colors group">
+<div class="w-12 h-12 rounded bg-neutral-100 dark:bg-surface-container-high flex-shrink-0 bg-cover bg-center opacity-70 group-hover:opacity-100 transition-all border border-neutral-200 dark:border-outline-variant/30" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB_8l0z0Pz7e93nHMX3JbhTZk7EVq47m7PNNmsSFBqUG3ddGHcQUIhcZBVdPNGF9UfpqRHS5YJCETbIeJc1NmqjTIKY0D3Wz83zpNjn60PrAWFMlkT9xY1MYT6rW0NShyuhwPLX7GYzv3w_UCnKcOHUut7nCFonO1SvoGqN1sL105lFdXZb-6Dh8PqbrredSsZXRagcd-5ELIyBD0h8uSlM01I0lHo7I3k8FVZ8oc7WHveK4R9FWGWr');"></div>
+<div class="flex-1 min-w-0">
+<p class="font-body-sm text-[14px] text-neutral-700 dark:text-on-surface truncate group-hover:text-neutral-900 dark:group-hover:text-primary transition-colors">Binaural Beats Focus</p>
+<p class="font-body-sm text-[12px] text-neutral-500 dark:text-on-surface-variant truncate transition-colors">Mind Sync</p>
+</div>
+<span class="font-body-sm text-[12px] text-neutral-500 dark:text-on-surface-variant group-hover:text-neutral-700 dark:group-hover:text-on-surface transition-colors">32:15</span>
+</div>
+<!-- Inactive Track 3 -->
+<div class="flex items-center gap-md p-sm rounded-lg hover:bg-neutral-50 dark:hover:bg-surface-container cursor-pointer transition-colors group">
+<div class="w-12 h-12 rounded bg-neutral-100 dark:bg-surface-container-high flex-shrink-0 bg-cover bg-center opacity-70 group-hover:opacity-100 transition-all border border-neutral-200 dark:border-outline-variant/30" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAqT1qykxNAgc0KkVBkX-zTWiAvelxLvKP4O9-l58I0x8fqK6rQGNizCNMZzp4Jm7b_m7PT9T3A7aOs8ACLUMq9rxSQIkG-bEE8AhwDBbQw_c323VkKEfUDbhyM35buTvLq78UMqIWGYonI7dapk2phzJMpc7-lMKRqUpDvAuzD8Fq1GkT0kg4E67VAXF1BcWpjs7rAQXn3DL2jZ9A9oo8e25EyxH_4_JUkI7JxwAspw3clPLf1JPlA');"></div>
+<div class="flex-1 min-w-0">
+<p class="font-body-sm text-[14px] text-neutral-700 dark:text-on-surface truncate group-hover:text-neutral-900 dark:group-hover:text-primary transition-colors">Delta Sleep Patterns</p>
+<p class="font-body-sm text-[12px] text-neutral-500 dark:text-on-surface-variant truncate transition-colors">Restorative</p>
+</div>
+<span class="font-body-sm text-[12px] text-neutral-500 dark:text-on-surface-variant group-hover:text-neutral-700 dark:group-hover:text-on-surface transition-colors">60:00</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Playback Bar -->
+<div class="fixed bottom-0 left-0 w-full bg-white dark:bg-surface-container-lowest border-t border-neutral-200 dark:border-surface-container-high z-50 h-24 flex flex-col justify-center items-center transition-colors duration-200">
+<div class="w-full max-w-[1200px] flex flex-col justify-center gap-sm px-md lg:px-xl">
+<!-- Progress Bar Area -->
+<div class="flex items-center gap-sm lg:gap-md w-full group">
+<span class="text-[10px] lg:text-[12px] font-body-sm text-neutral-500 dark:text-on-surface-variant w-8 lg:w-10 text-right transition-colors">12:34</span>
+<div class="flex-1 h-1 bg-neutral-200 dark:bg-surface-container-high rounded-full relative cursor-pointer flex items-center transition-colors">
+<!-- Buffered -->
+<div class="absolute left-0 h-full bg-neutral-300 dark:bg-surface-container-highest rounded-full w-3/4 transition-colors"></div>
+<!-- Played -->
+<div class="absolute left-0 h-full bg-neutral-900 dark:bg-primary rounded-full w-1/3 shadow-none dark:shadow-[0_0_10px_rgba(255,255,255,0.4)] transition-colors"></div>
+<!-- Scrubber Handle -->
+<div class="absolute left-1/3 w-3 h-3 bg-neutral-900 dark:bg-primary rounded-full -ml-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-sm dark:shadow-[0_0_8px_rgba(255,255,255,0.8)] scale-0 group-hover:scale-100 duration-200"></div>
+</div>
+<span class="text-[10px] lg:text-[12px] font-body-sm text-neutral-500 dark:text-on-surface-variant w-8 lg:w-10 transition-colors">45:20</span>
+</div>
+<!-- Controls Area -->
+<div class="flex justify-between items-center w-full">
+<!-- Left: Current Track Info Mini -->
+<div class="w-1/4 lg:w-1/3 flex items-center gap-sm">
+<div class="w-8 h-8 lg:w-10 lg:h-10 rounded overflow-hidden bg-neutral-200 dark:bg-surface-container-high flex-shrink-0 transition-colors">
+<div class="w-full h-full bg-cover bg-center opacity-80" data-alt="A tiny square thumbnail matching the currently playing track. Minimalist dark aesthetic, deep black with a hint of red." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDDYIwCSxSUh7Z4Q3_gS0Qe_WPmqpvoOVhiHBg93-e3hn8KsYiGIzxzNIMHharZQGBgMQMShqp9umwfal08OtLMtayF3P_rONpAOfVyPU6Jx822uVhqAfNwyHlsqICIUvhZhEKh4r4WawWh6h-fhuLY1nKWBm8aOcC3R7MvuLj8DKXTU0v6kGsyDdmOXhnLaN9AqdLqlJBb_ph4aAYf8Bx77-yze86UV_4yC-xbQD0KW1L4ofT4wwvO')"></div>
+</div>
+<div class="hidden md:block">
+<h4 class="font-body-sm text-[13px] text-neutral-900 dark:text-on-surface truncate w-32 lg:w-48 transition-colors">Alpha Waves Introspection</h4>
+<p class="font-body-sm text-[11px] text-neutral-500 dark:text-on-surface-variant truncate transition-colors">Neural Nets</p>
+</div>
+</div>
+<!-- Center: Core Controls -->
+<div class="flex items-center justify-center gap-sm lg:gap-md flex-1 lg:w-1/3">
+<button class="hidden sm:flex w-8 h-8 lg:w-10 lg:h-10 rounded-full items-center justify-center text-neutral-500 dark:text-on-surface-variant hover:text-neutral-900 dark:hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px] lg:text-[20px]">shuffle</span>
+</button>
+<button class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-neutral-700 dark:text-on-surface hover:text-neutral-900 dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined fill text-[20px] lg:text-[24px]">skip_previous</span>
+</button>
+<button class="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-neutral-900 dark:bg-primary flex items-center justify-center text-white dark:text-on-primary hover:scale-105 transition-all shadow-md dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+<span class="material-symbols-outlined fill text-[24px] lg:text-[28px]">pause</span>
+</button>
+<button class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-neutral-700 dark:text-on-surface hover:text-neutral-900 dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined fill text-[20px] lg:text-[24px]">skip_next</span>
+</button>
+<button class="hidden sm:flex w-8 h-8 lg:w-10 lg:h-10 rounded-full items-center justify-center text-neutral-500 dark:text-on-surface-variant hover:text-neutral-900 dark:hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px] lg:text-[20px]">repeat</span>
+</button>
+</div>
+<!-- Right: Secondary Controls -->
+<div class="w-1/4 lg:w-1/3 flex items-center justify-end gap-xs lg:gap-sm">
+<button class="hidden sm:flex w-8 h-8 lg:w-10 lg:h-10 rounded-full items-center justify-center text-neutral-500 dark:text-on-surface-variant hover:text-neutral-900 dark:hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined text-[18px] lg:text-[20px]">volume_up</span>
+</button>
+<div class="hidden sm:flex w-16 lg:w-24 h-1 bg-neutral-200 dark:bg-surface-container-high rounded-full relative cursor-pointer group items-center transition-colors">
+<div class="absolute left-0 h-full bg-neutral-500 dark:bg-on-surface-variant group-hover:bg-neutral-900 dark:group-hover:bg-primary rounded-full w-2/3 transition-colors"></div>
+</div>
+<button class="w-8 h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-neutral-500 dark:text-on-surface-variant hover:text-neutral-900 dark:hover:text-on-surface transition-colors lg:ml-sm">
+<span class="material-symbols-outlined text-[20px] lg:text-[20px]">fullscreen</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>
